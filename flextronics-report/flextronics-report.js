@@ -48,7 +48,7 @@ $scope.submit=function(){
        $scope.res = response.data;
        for(var n=0;n<$scope.res.purchaseorder.length;n++){
         $scope.poData.poNumber=$scope.res.purchaseorder[n].poNumber
-        $scope.poData.POQty=$scope.res.purchaseorder[n].purchaseorder.orderQuantity
+        $scope.poData.POQty=$scope.res.purchaseorder[n].purchaseorder.orderQuantity+" ("+($scope.res.purchaseorder[n].purchaseorder.creationDate)+")"
         $scope.poData.shipped=" "
         $scope.poData.received=" "
         $scope.poData.consumed=" "
@@ -59,8 +59,8 @@ $scope.submit=function(){
         $scope.PODataPending.push($scope.poData)
         $scope.poData={}
          for(var j=0;j<$scope.res.purchaseorder[n].purchaseorder.batch.length;j++){
-          $scope.poData.shipped=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.shippedQuantity
-          $scope.poData.received=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.recievedQuantity
+          $scope.poData.shipped=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.shippedQuantity+" ("+$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.shipmentDate+")"
+          $scope.poData.received=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.recievedQuantity+" ("+$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.receiptDate+")" 
           $scope.poData.consumed=" "
           $scope.poData.balance=" "
           $scope.poData.paymentDue=" "
@@ -69,7 +69,7 @@ $scope.submit=function(){
           var timeDiff = Math.abs(date2.getTime() - date1.getTime());
           var diffDays = Math.ceil(timeDiff / (1000 * 3600* 24)); 
           if($scope.res.purchaseorder[n].purchaseorder.batch[j].batch.availableQuantity>0 & diffDays>90){
-            $scope.poData.overDue=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.availableQuantity
+            $scope.poData.overDue=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.availableQuantity+" ("+$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.receiptDate +")"
           }
           else 
           $scope.poData.overDue=" "
@@ -80,7 +80,7 @@ $scope.submit=function(){
         for(var k=0;k<$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.invoice.length;k++){
           $scope.poData.shipped=""
           $scope.poData.received=""
-          $scope.poData.consumed=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.invoice[k].consumptionQuantity
+          $scope.poData.consumed=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.invoice[k].consumptionQuantity+" ("+$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.receiptDate+")"
           $scope.poData.balance=""
           $scope.poData.status=$scope.res.purchaseorder[n].purchaseorder.batch[j].batch.invoice[k].invoiceStatus
           $scope.poData.overDue=" "
@@ -96,12 +96,6 @@ $scope.submit=function(){
        $scope.search=true      
       $scope.loading=false
       $scope.fialuier=false
-        
-    }, function errorCallback(response){
-     console.log("POST-ing of data failed");
-     $scope.loading=false
-     $scope.fialuier=true
-     $scope.search=false
   });
   }
   
